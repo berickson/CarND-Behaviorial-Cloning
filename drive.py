@@ -12,13 +12,7 @@ from PIL import ImageOps
 from flask import Flask, render_template
 from io import BytesIO
 
-# added by brian
-import cv2
-
-def pre_process_image(im):
-    new_size=(im.shape[1]//2,im.shape[0]//2)
-    small=cv2.resize(im,(new_size),interpolation=cv2.INTER_AREA)
-    return  (cv2.cvtColor(small,cv2.COLOR_RGB2YUV).astype(float) - 128.)/255.
+from preprocess import preprocess_image
 
 from keras.models import model_from_json
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array
@@ -45,7 +39,7 @@ def telemetry(sid, data):
     imgString = data["image"]
     image = Image.open(BytesIO(base64.b64decode(imgString)))
     image_array = np.asarray(image)
-    image_array=pre_process_image(image_array)
+    image_array=preprocess_image(image_array)
     transformed_image_array = image_array[None, :, :, :]
     print('image size',transformed_image_array.shape)
     # This model currently assumes that the features of the model are just the images. Feel free to change this.

@@ -6,15 +6,23 @@ This project uses a neural network to learn to predict a drivers steering input 
 
 
 ## Files
-model.py - The script used to create and train the model.
-drive.py - The script to drive the car. You can feel free to resubmit the original drive.py or make modifications and submit your modified version.
-model.json - The model architecture.
-model.h5 - The model weights.
-README.md - explains the structure of your network and training approach. While we recommend using English for good practice, writing in any language is acceptable (reviewers will translate). There is no minimum word count so long as there are complete descriptions of the problems and the strategies. See the rubric for more details about the expectations.
 
+| file          |                                                |
+|---------------|------------------------------------------------
+ [model.py](model.py)    | The script used to create and train the model. 
+ [drive.py](drive.py)      | The script used to drive the car                                                 
+ [model.json](model.json)    | Model architecture                             
+ model.h5      | Model weights                                  
+ README.md     | This file                                      
 
 ## Installation
+
 In addition to the instructions provided in the courseware, I found that the following are required by drive.py
 
     conda install -c conda-forge flask-socketio=2.7.1
     conda install -c conda-forge eventlet=0.19.0
+
+## Datasets Used
+
+
+## Training

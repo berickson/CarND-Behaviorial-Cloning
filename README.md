@@ -39,6 +39,14 @@ The datasets that I used are not published as part of this repository as they ar
 
 ## Preprocessing
 
+The following preprocessing steps are used:
 
+The colorspace is changed from RGB to HLS.  The idea is that these are easier for the neural network to understand, especially with differences in lighting. Antedoctal testing indicated that HLS outperformed RGB in training.
+
+The image tops and bottoms are cropped.  The idea is to get the network to concentrate on the road.  The top of the image above the horizon doesn't contain any road was removed and the bottom portion which contains the car itself was removed.  I removed the car portion in preparation for possible Left / Right / Center processing so the model wouldn't get any hints of which camera was being used.
+
+The image is downsampled at 2:1 in both horizontal and vertical dimensions.
+
+The preprocessing lowers the image size from 160x320x3 to 45x160x3.  The resulting images take less than 15% memory and let me get about 7 times more images in memory at once.
 
 ## Training

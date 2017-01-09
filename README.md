@@ -12,9 +12,9 @@ This project uses a neural network to learn to predict a drivers steering input 
  [model.py](model.py)    | The script used to create and train the model. 
  [processing.py](processing.py) | Image preprocessing routine used by model.py and drive.py
  [drive.py](drive.py)      | The script used to drive the car, modified to include preprocessing
- [model.json](model.json)    | Model architecture                             
- [model.h5](model.h5)      | Model weights                                  
- README.md     | This file                                      
+ [model.json](model.json)    | Model architecture
+ [model.h5](model.h5)      | Model weights
+ README.md     | This file
 
 ## Installation
 
@@ -50,3 +50,17 @@ The image is downsampled at 2:1 in both horizontal and vertical dimensions.
 The preprocessing lowers the image size from 160x320x3 to 45x160x3.  The resulting images take less than 15% memory and let me get about 7 times more images in memory at once.
 
 ## Training
+The following were considerations during training:
+- Prevent over-fitting
+- Keep training time down
+- Normalization
+
+### Preventing Overfitting
+To prevent overfitting, I split my data into training and validation sets and I also applied dropout.
+
+The training set was 80% of the samples and the validation set was 20% of the samples.  I used a training method that would keep the best model based on the loss from the validation set, even if the training set continued to show lower loss due to overfitting.  This is done automatically using the "ModelCheckpoint" callback provided by Keras.
+
+In the model itself, I added a dropout layer with 50% retention.  This will help to reinforce more general learning and reduce overfitting.
+
+### Keep Training Time Down
+To keep the training time down, I reduced the image size by first downsizing 2:1 and then removing the sky from the image so the training could concentrate on the road.  The original image size was 160x320x3 and after manipulation, it became 50x160x3, this reduces the number of pixels from 51,200 to 8000.  With this smaller image size, I can keep more images in memory and don't need to use a slower generator function that would need to read the images from disk.

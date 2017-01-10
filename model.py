@@ -41,7 +41,7 @@ def nvidia_model(input_shape):
 def model_a(input_shape):
     model = Sequential()
     model.add(keras.layers.InputLayer(input_shape=input_shape))
-    model.add(SeparableConvolution2D(16, 3,3,  border_mode='valid', subsample=(2,2),activation='relu',name='conv1', dim_ordering='tf'))
+    model.add(Convolution2D(16, 3,3,  border_mode='valid', subsample=(2,2),activation='relu',name='conv1', dim_ordering='tf'))
     model.add(Convolution2D(32, 3, 3, border_mode='valid',  subsample=(2,2), activation='relu',name='conv2', dim_ordering='tf'))
     model.add(Convolution2D(8, 5, 5, border_mode='valid', activation='relu',name='conv3', dim_ordering='tf'))
     model.add(MaxPooling2D(pool_size=(4, 4), name ='maxpool2'))

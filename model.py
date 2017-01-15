@@ -9,32 +9,36 @@ from keras.layers import Convolution2D, MaxPooling2D, Activation, Dropout, Flatt
 from keras.layers import Dense, Lambda, SeparableConvolution2D, Dense
 from keras.callbacks import ModelCheckpoint, EarlyStopping
 from keras.activations import relu, elu
+from keras import initializations
 
 def RELU():
     return Activation(elu)
 
+nvidia_init = 'he_normal'
+
 def nvidia_model(input_shape):
     model = Sequential()
     model.add(Lambda(lambda x: x/127.5 -1., input_shape = input_shape))
-    model.add(Convolution2D(24, 5, 5, subsample=(2, 2), border_mode="valid", init="he_normal"))
+    model.add(Convolution2D(24, 5, 5, subsample=(2, 2), border_mode="valid", init=nvidia_init))
     model.add(RELU())
-    model.add(Convolution2D(36, 5, 5, subsample=(2, 2), border_mode="valid", init="he_normal"))
+    model.add(Convolution2D(36, 5, 5, subsample=(2, 2), border_mode="valid", init=nvidia_init))
     model.add(RELU())
-    model.add(Convolution2D(48, 5, 5, subsample=(2, 2), border_mode="valid", init="he_normal"))
+    model.add(Convolution2D(48, 5, 5, subsample=(2, 2), border_mode="valid", init=nvidia_init))
     model.add(RELU())
-    model.add(Convolution2D(64, 3, 3, subsample=(1, 1), border_mode="valid", init="he_normal"))
+    model.add(Convolution2D(64, 3, 3, subsample=(1, 1), border_mode="valid", init=nvidia_init))
     model.add(RELU())
-    model.add(Convolution2D(64, 3, 3, subsample=(1, 1), border_mode="valid", init="he_normal"))
+    model.add(Convolution2D(64, 3, 3, subsample=(1, 1), border_mode="valid", init=nvidia_init))
     model.add(RELU())
-    model.add(Dense(1164, init="he_normal"))
+    model.add(Flatten())
+    model.add(Dense(1164, init=nvidia_init))
     model.add(RELU())
-    model.add(Dense(100, init="he_normal"))
+    model.add(Dense(100, init=nvidia_init))
     model.add(RELU())
-    model.add(Dense(50, init="he_normal"))
+    model.add(Dense(50, init=nvidia_init))
     model.add(RELU())
-    model.add(Dense(10, init="he_normal"))
+    model.add(Dense(10, init=nvidia_init))
     model.add(RELU())
-    model.add(Dense(1, init="he_normal"))
+    model.add(Dense(1, init=nvidia_init))
     return model
 
 

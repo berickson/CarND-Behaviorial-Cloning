@@ -1,7 +1,3 @@
-# manually transcribed and modified from 
-# https://chatbotslife.com/learning-human-driving-behavior-using-nvidias-neural-network-model-and-image-augmentation-80399360efee#.u8zq6ghon
-
-# according to docs, nvidia used elu
 
 import keras
 from keras.models import Sequential
@@ -101,9 +97,9 @@ def model_a(input_shape):
     model.add(Convolution2D(8, 5, 5, border_mode='valid', activation='relu',name='conv3', dim_ordering='tf'))
     model.add(MaxPooling2D(pool_size=(4, 4), name ='maxpool2'))
     model.add(Flatten())
-    model.add(Dense(20,activation='sigmoid',name='dense20'))
+    model.add(Dense(20,activation='tanh',name='dense20'))
     model.add(Dropout(0.5, name ='dropout'))
-    model.add(Dense(20,activation='sigmoid', name = 'dense10'))
+    model.add(Dense(20,activation='tanh', name = 'dense10'))
     model.add(Dense(1,activation='linear', name = 'final'))
     return model
 
@@ -119,7 +115,7 @@ def actual_file_path_for_image(data_folder, filename):
     return rv
 
 
-def read_logs(data_folder, include_side_images = True, side_image_correction=0.2, verbose=True):
+def read_logs(data_folder, include_side_images = True, side_image_correction=0.12, verbose=True):
     '''
     returns parallel numpy arrays of filenames and steering angles for all sub-folders of data_folder
     '''

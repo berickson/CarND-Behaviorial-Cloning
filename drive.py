@@ -27,6 +27,31 @@ app = Flask(__name__)
 model = None
 prev_image_array = None
 
+def clamp(n, smallest, largest): return max(smallest, min(n, largest))
+
+class PID:
+    def __init__(self, sp, ksp=0.01, kp=0.2, ki=0.0001, kd=0.0, max_i=300.):
+        self.sp = sp
+        self.kp = kp
+        self.ki = ki
+        self.kd = kd
+        self.ksp = ksp
+        self.i = 0.0
+        self.max_i = max_i
+        self.last_v = 0.0
+        
+    def update(self, v):
+        e = self.sp - v
+        d = v - self.last_v
+        self.last_v = v
+        self.i = clamp(self.i + e,-self.max_i, self.max_i)
+        
+        return self.sp*self.ksp + self.kp * e + self.ki * self.i + self.kd * d
+        
+pid = PID(sp = 25)
+        
+        
+
 @sio.on('telemetry')
 def telemetry(sid, data):
     # The current steering angle of the car
@@ -34,19 +59,21 @@ def telemetry(sid, data):
     # The current throttle of the car
     throttle = data["throttle"]
     # The current speed of the car
-    speed = data["speed"]
+    speed = float(data["speed"])
     # The current image from the center camera of the car
     imgString = data["image"]
     image = Image.open(BytesIO(base64.b64decode(imgString)))
     image_array = np.asarray(image)
     image_array=preprocess_image(image_array)
     transformed_image_array = image_array[None, :, :, :]
-    print('image size',transformed_image_array.shape)
+    #print('image size',transformed_image_array.shape)
     # This model currently assumes that the features of the model are just the images. Feel free to change this.
     steering_angle = float(model.predict(transformed_image_array, batch_size=1))
-    print(".")
+    #print(".")
     # The driving model currently just outputs a constant throttle. Feel free to edit this.
-    throttle = 0.3
+    #throttle = 0.3
+    throttle = pid.update(speed)
+    
     print(steering_angle, throttle)
     send_control(steering_angle, throttle)
 

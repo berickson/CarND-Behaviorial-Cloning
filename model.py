@@ -1,4 +1,3 @@
-
 import keras
 from keras.models import Sequential
 from keras.layers import Convolution2D, MaxPooling2D, Activation, Dropout, Flatten
@@ -90,6 +89,23 @@ def read_driving_log(folder):
     return pd.read_csv(csv_path,names=csv_column_names,skiprows=1)
 
 def model_a(input_shape):
+    '''
+    defines the model for this project
+    
+    This was loosely based on the nvidia and LeNet models, but I modified it myself
+    
+    Three convolutional layres are used to allow medium complexity feature detection
+    
+    Relu activations are used in several places to introduce non-linearities and 
+    add an opportunity for the model to create sparsity
+    
+    A dropout is used to keep the model from over-fitting
+    Two dense layers are used with tanh activations.  Tanh was selected because it 
+    is symetric around zero and in general, steering angles ar centered on zero.
+    
+    Finally, a linear activate was used in the output layer to ensure outputs weren't
+    unecessarily compressed / limited as would be done by tanh, or relu.
+    '''
     model = Sequential()
     model.add(keras.layers.InputLayer(input_shape=input_shape))
     model.add(Convolution2D(16, 3,3,  border_mode='valid', subsample=(2,2),activation='relu',name='conv1', dim_ordering='tf'))
@@ -170,13 +186,25 @@ class BehaviorCloner:
         pass
     
     def _compile(self):
+        '''
+        compiles model with mean square error loss optimization and a slow Adam optimizer
+        
+        The Adam optimizer was chosen because it has a lower depence on hyperparameters
+        and tends to do well at converging
+        '''
         self.model.compile(loss='mse', optimizer=Adam(lr=0.0001)) # 0.01 sucked and would stall at 0.0262
     
     def create_model(self):
+        '''
+        creates an unitialized model, ready to train
+        '''
         self.model = model_a(self.X_val[0].shape)
         self._compile()
         
     def load_data(self, sample_limit = None):
+        '''
+        loads all images from data folder, samples up to sample limit if not None
+        '''
         X_path,y=read_logs(self.data_folder)
         if sample_limit is not None:
             X_path,y = random_sample(X_path,y,n=sample_limit, random_order=False)
@@ -189,6 +217,9 @@ class BehaviorCloner:
         self.X_val = load_images_for_files(X_val_path)
         
     def load_model(self, path = None):
+        '''
+        loads model with weights from path
+        '''
         if path is None:
             path = self.checkpoint_filename
         self.model = keras.models.load_model(path)
@@ -196,11 +227,24 @@ class BehaviorCloner:
 
     
     def get_model(self):
+        '''
+        returns model.  Creates if necessary
+        '''
         if self.model is None:
             self.create_model()
         return self.model
         
     def train(self, nb_epoch=200, batch_size=100, patience=5, keep_best = True):
+        '''
+        trains model
+        
+        params
+        ------
+        nb_epoch - maximum number of epochs to train
+        batrch_size - batch size to use while training
+        patience - number of epochs to wait for improvement in loss before quitting
+        keep_best - if true, keeps the model from the epoch with the lowest loss
+        '''
         model = self.get_model()
         history = model.fit(self.X_train, self.y_train, shuffle=True,
             nb_epoch=nb_epoch, batch_size=batch_size,
@@ -210,6 +254,9 @@ class BehaviorCloner:
             self.load_model(self.checkpoint_filename)
             
     def save_json_and_weights(self, json_filename='model.json', weights_filename='model.h5'):
+        '''
+        saves model in a format required for project submission.
+        '''
         model = self.get_model()
         json = model.to_json()
         with open(json_filename, 'w') as f:
@@ -217,6 +264,9 @@ class BehaviorCloner:
         model.save_weights(weights_filename)
         
     def plot_predictions(self):
+        '''
+        creates plots of predicted vs training values
+        '''
         model = self.get_model()
         plt.figure(figsize=(10,10))
         

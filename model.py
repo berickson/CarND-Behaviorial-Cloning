@@ -105,6 +105,9 @@ def model_a(input_shape):
     
     Finally, a linear activate was used in the output layer to ensure outputs weren't
     unecessarily compressed / limited as would be done by tanh, or relu.
+    
+    Note: The data is normalized by the image preprocessing so no additional normalization 
+    is done by the model.
     '''
     model = Sequential()
     model.add(keras.layers.InputLayer(input_shape=input_shape))

@@ -12,7 +12,7 @@ Video recording of successfully navigating both tracks [here](https://youtu.be/5
 | file          |                                                |
 |---------------|------------------------------------------------
   [model.py](model.py)    | The script used to create and train the model. 
- [processing.py](processing.py) | Image preprocessing routine used by model.py and drive.py
+ [preprocessing.py](preprocessing.py) | Image preprocessing routine used by model.py and drive.py
  [drive.py](drive.py)      | The script used to drive the car, modified to include preprocessing
  [model.json](model.json)    | Model architecture
  [model.h5](model.h5)      | Model weights

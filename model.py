@@ -102,7 +102,7 @@ def model_a(input_shape):
     
     This was loosely based on the NVIDIA and LeNet models, but I modified it myself
     
-    Three convolutional layres are used to allow medium complexity feature detection
+    Three convolutional layers are used to allow medium complexity feature detection
     
     Relu activations are used in several places to introduce non-linearities and 
     add an opportunity for the model to create sparsity

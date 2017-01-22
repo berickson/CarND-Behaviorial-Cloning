@@ -4,8 +4,10 @@ Author: Brian Erickson
 
 This project uses a neural network to predict a drivers steering input given the camera images of the view from the car onto the road.  A driving simulator is used to record images and steering angles.  These are used to train the model. The model can be used to control the simulator.
 
-Video recording of successfully navigating both tracks below [link](https://youtu.be/5NqPmhm5s3I)
-<iframe width="560" height="315" src="https://www.youtube.com/embed/5NqPmhm5s3I" frameborder="0" allowfullscreen></iframe>
+Video recording of successfully navigating both tracks below 
+
+[![Video of Simulation](https://img.youtube.com/vi/5NqPmhm5s3I/0.jpg)](https://www.youtube.com/watch?v=5NqPmhm5s3I)
+[link](https://youtu.be/5NqPmhm5s3I)
 
 
 ## Files

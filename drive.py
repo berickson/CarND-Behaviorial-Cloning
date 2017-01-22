@@ -12,7 +12,7 @@ from PIL import ImageOps
 from flask import Flask, render_template
 from io import BytesIO
 
-from preprocess import preprocess_image
+from model import preprocess_image
 
 from keras.models import model_from_json
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array

@@ -11,7 +11,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 from keras.optimizers import Adam
 
-from preprocess import preprocess_image
+import cv2
+
+def preprocess_image(im):
+    #return im
+    new_size=(im.shape[1]//2,im.shape[0]//2)
+    im=cv2.resize(im,(new_size),interpolation=cv2.INTER_AREA)
+    im=im[30:,:,:]
+    im=cv2.cvtColor(im,cv2.COLOR_RGB2YUV)
+    return  ((im.astype(np.float16) - 128.)/255.)
 
 def split(*lists,n=None,ratio=None):
     '''
@@ -92,7 +100,7 @@ def model_a(input_shape):
     '''
     defines the model for this project
     
-    This was loosely based on the nvidia and LeNet models, but I modified it myself
+    This was loosely based on the NVIDIA and LeNet models, but I modified it myself
     
     Three convolutional layres are used to allow medium complexity feature detection
     
@@ -101,9 +109,9 @@ def model_a(input_shape):
     
     A dropout is used to keep the model from over-fitting
     Two dense layers are used with tanh activations.  Tanh was selected because it 
-    is symetric around zero and in general, steering angles ar centered on zero.
+    is symmetric around zero and in general, steering angles ar centered on zero.
     
-    Finally, a linear activate was used in the output layer to ensure outputs weren't
+    Finally, a linear activation was used in the output layer to ensure outputs weren't
     unecessarily compressed / limited as would be done by tanh, or relu.
     
     Note: The data is normalized by the image preprocessing so no additional normalization 
